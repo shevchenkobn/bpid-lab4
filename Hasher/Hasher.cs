@@ -12,8 +12,8 @@ namespace Hasher
     }
     public static class Hasher
     {
-        private const int readLimit = 64;
-        private static readonly BigInteger modulus = new BigInteger(1) << ((readLimit - 1) * 8);
+        //private const int readLimit = 64;
+        //private static readonly BigInteger modulus = new BigInteger(1) << ((readLimit - 1) * 8);
         public static byte CalculateCheckSum(Stream stream, HasherMode mode = HasherMode.Bit8)
         {
             if (!stream.CanRead)
@@ -21,21 +21,26 @@ namespace Hasher
                 throw new ArgumentException("sosi pisos so svoim nechitayemim strimom");
             }
 
-            var power = readLimit;
-            var buffer = new byte[readLimit];
-            BigInteger sum = 0;
+            //var power = readLimit;
+            //var buffer = new byte[readLimit];
+            //BigInteger sum = 0;
+            long sum = 3427;
+
             var oldPosition = stream.Position;
             while (stream.Position < stream.Length)
             {
-                stream.Read(buffer, 0, buffer.Length);
+                var b = stream.ReadByte();
+                sum = b + 29 * 29 * sum;
 
-                var curr = new BigInteger(buffer);
-                sum = sum + BigInteger.ModPow(curr, power, modulus);
+                //stream.Read(buffer, 0, buffer.Length);
+
+                //var curr = new BigInteger(buffer);
+                //sum = sum + BigInteger.ModPow(curr, power, modulus);
             }
             stream.Seek(oldPosition, SeekOrigin.Begin);
 
             byte checkSum = 0;
-            var byteSum = sum.ToByteArray();
+            var byteSum = BitConverter.GetBytes(sum);//sum.ToByteArray();
             foreach (var b in byteSum)
             {
                 //checkSum += (byte)((((b & 128) >> 7) + ((b & 64) >> 6) + ((b & 32) >> 5) + ((b & 16) >> 4)
