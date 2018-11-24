@@ -5,7 +5,7 @@ namespace Hasher
 {
     class Program
     {
-        const int Iterations = 10;
+        const int Iterations = 100;
         const int MinimumBatchSize = 100_000;
         const int MaximumBatchSize = 1_000_000;
         static string ByteToString(byte b) => Convert.ToString(b, 2).PadLeft(8, '0');

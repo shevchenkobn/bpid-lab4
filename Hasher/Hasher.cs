@@ -12,7 +12,7 @@ namespace Hasher
     }
     public static class Hasher
     {
-        private const int readLimit = 255;
+        private const int readLimit = 64;
         private static readonly BigInteger modulus = new BigInteger(1) << ((readLimit - 1) * 8);
         public static byte CalculateCheckSum(Stream stream, HasherMode mode = HasherMode.Bit8)
         {
@@ -53,14 +53,14 @@ namespace Hasher
                 var bigCheckSum = checkSum;
                 checkSum = 0;
                 var step = (byte)(8 / (int)mode);
-                for (byte i = 0, limit = (byte)mode; i < limit; ++i)
+                for (byte i = 0, bits = (byte)mode; i < bits; ++i)
                 {
                     byte bitSum = 0;
                     for (byte j = i; j < 8; j += step)
                     {
                         bitSum += (byte)((bigCheckSum >> j) & 1);
                     }
-                    checkSum = (byte)((checkSum << 1) + (bitSum & 1));
+                    checkSum = (byte)((checkSum << 1) + (bitSum & 1));//(byte)(~bitSum & checkSum);
                 }
             }
 
